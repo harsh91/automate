@@ -20,7 +20,7 @@ public class LoanApplicationCreate {
     String loanAppId="";
 
     //Before Suite
-    @BeforeSuite(groups = {"sanity"})
+    @BeforeSuite
     public void turnOffTestNgListeners() {
 
         TestNG myTestNG = new TestNG();
