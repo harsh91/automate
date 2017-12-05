@@ -4,9 +4,6 @@
     <test name="test" preserve-order="true">
         <classes>
             <class name="oxyzo.tests.testCase">
-                <!--<methods>-->
-                    <!--<include name="testOxyzo"></include>-->
-                <!--</methods>-->
             </class>
         </classes>
     </test>
