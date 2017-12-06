@@ -2,7 +2,7 @@ package oxyzo.methods;
 
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.response.ValidatableResponse;
-import com.oxyzo.utils.Context;
+import oxyzo.utils.Context;
 import oxyzo.utils.VelocityTemplateFactory;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -21,10 +21,10 @@ public class LoanAppCreate_1 extends BaseUtils {
     public String loanApp()
     {
         vResponse =
-            given().
+            given().log().all().
                 contentType("application/json").
                 header("x-ofb-platform", "WEB_SITE").
-                body(VelocityTemplateFactory.convertTemplateToString("src/main/resources/template/newApp/newApp.vm")).
+                body(VelocityTemplateFactory.convertTemplateToString("src/main/resources/template/test_1/newApp.vm")).
 
                 when().
                 post("http://stg-oxyzo-api.ofbusiness.in/api/v1/oxyzo/lead").
