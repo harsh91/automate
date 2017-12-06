@@ -31,7 +31,7 @@ public class testCase extends BaseUtils {
         lC2.loanApp();
     }
 
-   /* @Test(groups = {"3"}, priority = 1)
+    @Test(groups = {"3"}, priority = 1)
     public void login_test_case_3() {
         System.out.println("==============option 3===================");
         lC2.testNfeLogin();
@@ -47,5 +47,5 @@ public class testCase extends BaseUtils {
     @Test(groups = {"3"}, priority = 4)
     public void testStatus() {
         lC3.loanAppStatusUpdate();
-    }*/
+    }
 }
