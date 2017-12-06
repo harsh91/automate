@@ -51,7 +51,7 @@ public class LoanAppCreate_3 extends BaseUtils {
             given().
                 contentType("application/json").
                 header("X-OFB-TOKEN", context.getAuthToken()).
-                body(VelocityTemplateFactory.convertTemplateToString("src/main/resources/template/test_3/newApp.vm")).
+                body(VelocityTemplateFactory.convertTemplateToString("src/main/resources/template/test_3/status.vm")).
 
                 when().
                 post("http://stg-oxyzo-api.ofbusiness.in/api/v1/oxyzo/admin/loanApplication/"+loanAppId
