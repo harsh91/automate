@@ -65,7 +65,7 @@ public class LoanAppCreate_2 extends BaseUtils {
     {
         System.out.println("auth token: "+ context.getAuthToken());
         vResponse =
-            given().
+            given().log().all().
                 contentType("application/json").
                 header("X-OFB-TOKEN", context.getAuthToken()).
                 body(VelocityTemplateFactory.convertTemplateToString("src/main/resources/template/test_1/newApp.vm")).
