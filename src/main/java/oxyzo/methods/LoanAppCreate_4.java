@@ -8,36 +8,33 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
- * Created by nitika on 25/11/17.
- * 1- loan_app_no_sales_assignee \n
+ * Created by nitika on 12/12/17.
+ * 4- loan_app status-underwriting \n
  */
-public class LoanAppCreate_1 extends BaseUtils {
-    public Response responseCreateApp =null;
-    String loanAppId="";
+public class LoanAppCreate_4 extends BaseUtils{
 
     private static final Context context = Context.getInstance();
+    public Response response =null;
 
-    public String loanApp()
+    public void loanPdFormSales()
     {
         context.vResponse =
             given().log().all().
                 contentType("application/json").
-                header("x-ofb-platform", "WEB_SITE").
-                body(VelocityTemplateFactory.convertTemplateToString("src/main/resources/template/test_1/newApp.vm")).
+                header("X-OFB-TOKEN", context.getAuthToken()).
+                body(VelocityTemplateFactory.convertTemplateToString
+                    ("src/main/resources/template/test_3/pdForm.vm")).
 
                 when().
-                post("http://stg-oxyzo-api.ofbusiness.in/api/v1/oxyzo/lead").
+                post("http://stg-oxyzo-api.ofbusiness.in/api/v1/oxyzo/admin/loanApplication/"+context.getLoanAppId() +"/pdform").
 
                 then();
-        responseCreateApp=
+        response=
             context.vResponse.
                 assertThat().body("success", equalTo(true)).
                 assertThat().body("errorMessage", equalTo(null)).
 
                 extract().
                 response();
-        loanAppId= responseCreateApp.jsonPath().getString("data.applicationId");
-        System.out.println("loan App Id: "+loanAppId);
-        return loanAppId;
     }
 }

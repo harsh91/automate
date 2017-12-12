@@ -1,7 +1,5 @@
 package oxyzo.methods;
 
-import com.jayway.restassured.response.Response;
-import com.jayway.restassured.response.ValidatableResponse;
 import oxyzo.utils.Context;
 import org.hamcrest.Matchers;
 import oxyzo.utils.VelocityTemplateFactory;
@@ -11,19 +9,16 @@ import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
  * Created by nitika on 25/11/17.
+ * 3- loan_app_status-processing
  */
 public class LoanAppCreate_3 extends BaseUtils {
-    public ValidatableResponse vResponse =null;
-    public Response response =null;
-    String loanAppId="";
-    String applicantAppId="";
 
     private static final Context context = Context.getInstance();
 
     public void loanAppUpdate()
     {
-        vResponse =
-            given().
+        context.vResponse =
+            given().log().all().
                 contentType("application/json").
                 header("X-OFB-TOKEN", context.getAuthToken()).
                 body(VelocityTemplateFactory.convertTemplateToString("src/main/resources/template/test_3/updateApp"
@@ -33,8 +28,8 @@ public class LoanAppCreate_3 extends BaseUtils {
                 patch("http://stg-oxyzo-api.ofbusiness.in/api/v1/oxyzo/admin/loanApplication").
 
                 then();
-        response=
-            vResponse.
+        context.response=
+            context.vResponse.
                 assertThat().body("success", equalTo(true)).
                 assertThat().body("errorMessage", equalTo(null)).
                 assertThat().statusCode(Matchers.equalTo(200)).
@@ -45,21 +40,50 @@ public class LoanAppCreate_3 extends BaseUtils {
 
     }
 
-    public void loanAppStatusUpdate()
+    public void loanAppVerifiedCust()
     {
-        vResponse =
-            given().
+        context.setAuthToken("6338559818789297767"); //change this nitika
+        System.out.println("auth token: "+ context.getAuthToken());
+        context.vResponse =
+            given().log().all().
+                contentType("application/json").
+                header("X-OFB-TOKEN", context.getAuthToken()).
+                body(VelocityTemplateFactory.convertTemplateToString("src/main/resources/template/test_3/verifiedCust.vm")).
+
+                when().
+                patch("http://stg-oxyzo-api.ofbusiness.in/api/v1/oxyzo/admin/loanApplication").
+
+                then();
+        context.response=
+            context.vResponse.
+                assertThat().body("errorMessage", equalTo(null)).
+
+                extract().
+                response();
+    }
+
+    public void loanAppStatusUpdate(String strStatus)
+    {
+        if(strStatus =="PROCESSING") {
+            context.setStatus("PROCESSING");
+        }
+        else if(strStatus =="UNDERWRITING") {
+            context.setStatus("UNDERWRITING");
+        }
+
+        context.vResponse =
+            given().log().all().
                 contentType("application/json").
                 header("X-OFB-TOKEN", context.getAuthToken()).
                 body(VelocityTemplateFactory.convertTemplateToString("src/main/resources/template/test_3/status.vm")).
 
                 when().
-                post("http://stg-oxyzo-api.ofbusiness.in/api/v1/oxyzo/admin/loanApplication/"+loanAppId
+                post("http://stg-oxyzo-api.ofbusiness.in/api/v1/oxyzo/admin/loanApplication/"+context.getLoanAppId()
                     +"/status").
 
                 then();
-        response=
-            vResponse.
+        context.response=
+            context.vResponse.
                 assertThat().body("success", equalTo(true)).
                 assertThat().body("errorMessage", equalTo(null)).
                 assertThat().statusCode(Matchers.equalTo(200)).

@@ -1,4 +1,4 @@
 {
-"status":"PROCESSING",
-"comment":test_comments
+"status":"$context.getStatus()",
+"comment":"test_comments"
 }

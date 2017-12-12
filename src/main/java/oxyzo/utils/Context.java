@@ -17,8 +17,9 @@ public class Context {
     public String baseURI;
     public String apiURI;
     public String authToken;
-
-
+    public String loanAppId;
+    public String applicantAppId;
+    public String status;
 
     public static Context getInstance() {
         return instance;
@@ -62,4 +63,37 @@ public class Context {
     public void setResponse(Response response) {
         this.response = response;
     }
+
+    public String getLoanAppId() {
+        return loanAppId;
+    }
+
+    public void setLoanAppId(String loanAppId) {
+        this.loanAppId = loanAppId;
+    }
+
+    public String getApplicantAppId() {
+        return applicantAppId;
+    }
+
+    public void setApplicantAppId(String applicantAppId) {
+        this.applicantAppId = applicantAppId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+ /*   public String getClientApplicationId() {
+        return clientApplicationId;
+    }
+
+    public void setClientApplicationId(String clientApplicationId) {
+        this.clientApplicationId = clientApplicationId;
+    }*/
+
 }

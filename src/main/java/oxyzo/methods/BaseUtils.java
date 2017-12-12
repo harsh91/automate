@@ -1,5 +1,6 @@
 package oxyzo.methods;
 
+import com.jayway.restassured.RestAssured;
 import java.util.Properties;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -35,6 +36,12 @@ public class BaseUtils {
     }
     private static final Context context = Context.getInstance();
 
+    @BeforeSuite(groups = {"sanity"})
+    public void setURL() {
+        // Setup data
+      //  setupData();
+        //RestAssured.baseURI = context.getBaseURI();
+    }
 
     public void setupData() {
         try {

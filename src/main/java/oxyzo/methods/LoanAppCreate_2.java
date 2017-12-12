@@ -2,7 +2,6 @@ package oxyzo.methods;
 
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
-import com.jayway.restassured.response.ValidatableResponse;
 import org.hamcrest.Matchers;
 
 import org.json.JSONException;
@@ -15,9 +14,9 @@ import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
  * Created by nitika on 25/11/17.
+ * 2- loan_app_with_assignee \n
  */
 public class LoanAppCreate_2 extends BaseUtils {
-    public ValidatableResponse vResponse =null;
     public Response responseCreateApp =null;
     String loanAppId="";
     String applicantAppId="";
@@ -27,7 +26,7 @@ public class LoanAppCreate_2 extends BaseUtils {
     public String testNfeLogin() {
         String authToken = null;
         try {
-            vResponse =
+            context.vResponse =
                 given().log().all()
                     .contentType("application/json")
                     .body(VelocityTemplateFactory.convertTemplateToString(
@@ -35,7 +34,7 @@ public class LoanAppCreate_2 extends BaseUtils {
                     .when()
                     .post("http://stg-api.ofbusiness.in/api/v1/account/login").
                     then();
-            context.response = vResponse.
+            context.response = context.vResponse.
                 assertThat().body("success", equalTo(true)).
                 assertThat().body("errorMessage", Matchers.equalTo(null)).
                 assertThat().statusCode(Matchers.equalTo(200)).
@@ -64,7 +63,7 @@ public class LoanAppCreate_2 extends BaseUtils {
     public String loanApp()
     {
         System.out.println("auth token: "+ context.getAuthToken());
-        vResponse =
+        context.vResponse =
             given().log().all().
                 contentType("application/json").
                 header("X-OFB-TOKEN", context.getAuthToken()).
@@ -75,7 +74,7 @@ public class LoanAppCreate_2 extends BaseUtils {
 
                 then();
         responseCreateApp=
-            vResponse.
+            context.vResponse.
                 assertThat().body("success", equalTo(true)).
                 assertThat().body("errorMessage", equalTo(null)).
 
@@ -85,6 +84,8 @@ public class LoanAppCreate_2 extends BaseUtils {
         applicantAppId= responseCreateApp.jsonPath().getString("data.applicantApplicationId");
         System.out.println("loan App Id: "+loanAppId);
         System.out.println("loan App Id: "+applicantAppId);
+        context.setLoanAppId(loanAppId);
+        context.setApplicantAppId(applicantAppId);
         return loanAppId;
     }
 }
