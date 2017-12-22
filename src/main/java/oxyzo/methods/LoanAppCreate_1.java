@@ -26,7 +26,7 @@ public class LoanAppCreate_1 extends BaseUtils {
                 body(VelocityTemplateFactory.convertTemplateToString("src/main/resources/template/test_1/newApp.vm")).
 
                 when().
-                post("http://stg-oxyzo-api.ofbusiness.in/api/v1/oxyzo/lead").
+                post("/api/v1/oxyzo/lead").
 
                 then();
         responseCreateApp=

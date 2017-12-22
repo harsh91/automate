@@ -1,0 +1,8 @@
+{
+"status":"$context.getStatus()",
+"loanAmount":100,
+"tenure":12,
+"interestRate":"12",
+"repaymentCycle":12,
+"processingCharge":"12"
+}

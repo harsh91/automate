@@ -2,6 +2,10 @@ package oxyzo.utils;
 
 import com.jayway.restassured.response.ValidatableResponse;
 import com.jayway.restassured.response.Response;
+import java.util.Properties;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 /**
  * Created by nitika on 24/11/17.
@@ -12,6 +16,9 @@ public class Context {
     }
 
     private static final Context instance = new Context();
+    Resource resource = new ClassPathResource("staging/environment_stg2.properties");
+    Properties properties = null;
+    public String testAccountID;
     public ValidatableResponse vResponse =null;
     public Response response =null;
     public String baseURI;
@@ -20,10 +27,37 @@ public class Context {
     public String loanAppId;
     public String applicantAppId;
     public String status;
+    public String loanRequestId;
+    public String loanId;
 
     public static Context getInstance() {
         return instance;
     }
+
+    public Resource getResource() {
+        return resource;
+    }
+
+    public void setResource(Resource resource) {
+        this.resource = resource;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
+    public String getTestAccountID() {
+        return testAccountID;
+    }
+
+    public void setTestAccountID(String testAccountID) {
+        this.testAccountID = testAccountID;
+    }
+
+
     public ValidatableResponse getvResponse() {
         return vResponse;
     }
@@ -95,5 +129,18 @@ public class Context {
     public void setClientApplicationId(String clientApplicationId) {
         this.clientApplicationId = clientApplicationId;
     }*/
+ public String getLoanRequestId() {
+     return loanRequestId;
+ }
 
+    public void setLoanRequestId(String loanRequestId) {
+        this.loanRequestId = loanRequestId;
+    }
+    public String getLoanId() {
+        return loanId;
+    }
+
+    public void setLoanId(String loanId) {
+        this.loanId = loanId;
+    }
 }

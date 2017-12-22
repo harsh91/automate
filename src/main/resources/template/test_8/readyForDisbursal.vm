@@ -1,0 +1,10 @@
+{
+"status":"READY_FOR_DISBURSAL",
+"sanctionedAmount":100,
+"tenure":12,
+"interestRate":"12",
+"processingFee":"12",
+"repaymentCycle":12,
+"sanctionDate":1513141089031,
+"comment":"test_comments"
+}

@@ -1,6 +1,7 @@
 package oxyzo.methods;
 
-import com.jayway.restassured.response.Response;
+import com.sun.tools.doclets.formats.html.PackageUseWriter;
+import java.security.PublicKey;
 import oxyzo.utils.Context;
 import oxyzo.utils.VelocityTemplateFactory;
 
@@ -9,27 +10,35 @@ import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
  * Created by nitika on 12/12/17.
- * 4- loan_app status-underwriting \n
- */
-public class LoanAppCreate_4 extends BaseUtils{
-
+ *
+ * 	7- loan_app_accepted_status_loan_loan-id_status-waiting_for_docs */
+public class LoanAppCreate_8 {
     private static final Context context = Context.getInstance();
-    public Response response =null;
-
-    public void loanPdFormSales()
+    public String strPath=null;
+    public void LoanStatus(String strStatus)
     {
+        if(strStatus=="DOCS_SENT_TO_NBFC")
+        {
+            context.setStatus("DOCS_SENT_TO_NBFC");
+            strPath="src/main/resources/template/test_8/docToNbfc.vm";
+        }
+        else if(strStatus=="READY_FOR_DISBURSAL")
+        {
+            context.setStatus("READY_FOR_DISBURSAL");
+            strPath="src/main/resources/template/test_8/readyForDisbursal.vm";
+        }
         context.vResponse =
             given().log().all().
                 contentType("application/json").
                 header("X-OFB-TOKEN", context.getAuthToken()).
                 body(VelocityTemplateFactory.convertTemplateToString
-                    ("src/main/resources/template/test_3/pdForm.vm")).
+                    (strPath)).
 
                 when().
-                post("/api/v1/oxyzo/admin/loanApplication/"+context.getLoanAppId() +"/pdform").
+                post("/api/v1/oxyzo/admin/loan/"+context.getLoanId()+"/status").
 
                 then();
-        response=
+        context.response=
             context.vResponse.
                 assertThat().body("success", equalTo(true)).
                 assertThat().body("errorMessage", equalTo(null)).
