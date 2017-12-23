@@ -19,6 +19,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 public class BaseUtils {
 
     String strLoanAppId=null;
+    String strLoanId=null;
 
     //Before Suite
     @BeforeSuite
@@ -35,7 +36,40 @@ public class BaseUtils {
         context.vResponse =
             given().log().all().
                 contentType("application/json").
-                header("X-OFB-TOKEN", "6342632194657228221").//change this nitika
+                header("X-OFB-TOKEN", "6340461937448460011").//change this nitika
+
+                when().
+                get("/api/v1/oxyzo/admin/loanApplications?pageNumber=0&query=9654997632&filter=STATUS:ALL").
+
+                then();
+        context.response=
+            context.vResponse.
+                assertThat().body("success", equalTo(true)).
+                assertThat().body("errorMessage", equalTo(null)).
+
+                extract().
+                response();
+        str=context.response.jsonPath().getString("data.content.size()");
+
+        numbLoan = Integer.parseInt(str);
+        System.out.println("number Loan Application------"+ numbLoan);
+        for(int i = 0;i<numbLoan;i++)
+        {
+            strLoanAppId =context.response.jsonPath().getString("data.content["+i+"].applicationId");
+            System.out.println("Loan id abandoned: "+ strLoanAppId);
+            loanAppStatusAbandoned(strLoanAppId);
+            loanAppStatusDeleted(strLoanAppId);
+        }
+    }
+
+    public void findLoan()
+    {
+        Integer numbLoan =0;
+        String str = null;
+        context.vResponse =
+            given().log().all().
+                contentType("application/json").
+                header("X-OFB-TOKEN", "6340461937448460011").//change this nitika
 
                 when().
                 get("/api/v1/oxyzo/admin/loans?query=&filter=ASSOCIATE_ACCOUNT_ID:6076953799463800943").
@@ -54,11 +88,39 @@ public class BaseUtils {
         System.out.println("numbLoan------"+ numbLoan);
         for(int i = 0;i<numbLoan;i++)
         {
-            strLoanAppId =context.response.jsonPath().getString("data.content["+i+"].loanApplicationId");
+            strLoanId =context.response.jsonPath().getString("data.content["+i+"].loanApplicationId");
             System.out.println("Loan id abandoned: "+ strLoanAppId);
-            loanStatusAbandoned(strLoanAppId);
+            loanStatusAbandoned(strLoanId);
 
         }
+    }
+
+    public void loanAppStatusAbandoned(String strLoanAppId)
+    {
+        context.vResponse =
+            given().log().all().
+                contentType("application/json").
+                header("X-OFB-TOKEN", "6340461937448460011").//change this nitika
+                body(VelocityTemplateFactory.convertTemplateToString
+                ("src/main/resources/template/login/loanStatus.vm")).
+                when().
+                post("/api/v1/oxyzo/internal/loanApplication/"+strLoanAppId+"/status/ABANDONED").
+
+                then();
+
+    }
+
+    public void loanAppStatusDeleted(String strLoanAppId)
+    {
+        context.vResponse =
+            given().log().all().
+                contentType("application/json").
+                header("X-OFB-TOKEN", "6340461937448460011").//change this nitika
+                when().
+                put("/api/v1/oxyzo/internal/changeDeletionStatus?entityType=LOAN_APPLICATION&entityId"
+                        + "="+strLoanAppId+"&isDeleteRequest=true").
+                then();
+
     }
 
     public void loanStatusAbandoned(String strLoanId)
@@ -70,7 +132,7 @@ public class BaseUtils {
                 body(VelocityTemplateFactory.convertTemplateToString
                 ("src/main/resources/template/login/loanStatus.vm")).
                 when().
-                post("/api/v1/oxyzo/internal/loanApplication/"+strLoanId+"/status/ABANDONED").
+                post("/api/v1/oxyzo/internal/loan/"+strLoanId+"/status/ABANDONED").
 
                 then();
 
@@ -88,7 +150,7 @@ public class BaseUtils {
             + "offered status \n 7.loan application in accepted status i.e loan with loan-id and with status - "
             + "waiting_for_docs");
         findLoanApplication();
-
+        findLoan();
     }
     private static final Context context = Context.getInstance();
 
@@ -121,7 +183,7 @@ public class BaseUtils {
                     header("X-OFB-TOKEN", context.getAuthToken()).
 
                     when().
-                    get("http://stg2-api.ofbusiness.in/api/v1/account/detail").
+                    get("/api/v1/account/detail").
 
                     then();
             Response responseOfAccountDetail= context.vResponse.log().ifError().
@@ -156,7 +218,7 @@ public class BaseUtils {
                     contentType("text/html").
 
                     when().
-                    put("http://stg2-api.ofbusiness.in/api/v1/automationBot/account").
+                    put("/api/v1/automationBot/account").
 
                     then();
             context.response=context.vResponse.log().ifError().

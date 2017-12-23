@@ -16,7 +16,7 @@ public class Context {
     }
 
     private static final Context instance = new Context();
-    Resource resource = new ClassPathResource("staging/environment_stg2.properties");
+    Resource resource = new ClassPathResource("staging/environment.properties");
     Properties properties = null;
     public String testAccountID;
     public ValidatableResponse vResponse =null;

@@ -79,6 +79,8 @@ public class LoanAppCreate_5 extends BaseUtils{
     }
     public void saveScoreCard()
     {
+        context.setLoanAppId("6343277533672250560");
+        context.setAuthToken("6340461937448460011");
         for(int i=1 ; i<10;i++) {
             String strBody = "src/main/resources/template/test_5/scoreCard_"+i+".vm";
 
