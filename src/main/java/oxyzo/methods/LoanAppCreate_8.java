@@ -1,10 +1,6 @@
 package oxyzo.methods;
-
-import com.sun.tools.doclets.formats.html.PackageUseWriter;
-import java.security.PublicKey;
 import oxyzo.utils.Context;
 import oxyzo.utils.VelocityTemplateFactory;
-
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.core.IsEqual.equalTo;
 
