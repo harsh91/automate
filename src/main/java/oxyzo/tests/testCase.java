@@ -24,7 +24,7 @@ public class testCase extends BaseUtils {
     LoanAppCreate_8 lC8 = new LoanAppCreate_8();
 
 
-      /* @Test(groups = {"1"})
+       @Test(groups = {"1"})
       public void testOxyzo() {
         System.out.println("==============option 1===================");
         lC1.loanApp();
@@ -41,7 +41,7 @@ public class testCase extends BaseUtils {
     }
 
     /* -------------for option 3--------*/
-    /*@Test(groups = {"3"}, priority = 1)
+    @Test(groups = {"3"}, priority = 1)
     public void login_test_case_3() {
         System.out.println("==============option 3===================");
         lC2.testNfeLogin();
@@ -62,7 +62,7 @@ public class testCase extends BaseUtils {
     }
 
     /* -------------for option 4--------*/
-   /* @Test(groups = {"4"}, priority = 1)
+    @Test(groups = {"4"}, priority = 1)
     public void login_test_case_4() {
         System.out.println("==============option 4===================");
         lC2.testNfeLogin();
@@ -96,7 +96,7 @@ public class testCase extends BaseUtils {
     }
 
     /* -------------for option 5--------*/
-  /*  @Test(groups = {"5"}, priority = 1)
+    @Test(groups = {"5"}, priority = 1)
     public void login_test_case_5() {
         System.out.println("==============option 5===================");
         lC2.testNfeLogin();
@@ -141,7 +141,7 @@ public class testCase extends BaseUtils {
     }
 
     /* -------------for option 6--------*/
-  /*  @Test(groups = {"6"}, priority = 1)
+    @Test(groups = {"6"}, priority = 1)
     public void login_test_case_6() {
         System.out.println("==============option 6===================");
         lC2.testNfeLogin();
@@ -190,7 +190,7 @@ public class testCase extends BaseUtils {
     }
 
     /* -------------for option 7--------*/
-   /* @Test(groups = {"7"}, priority = 1)
+    @Test(groups = {"7"}, priority = 1)
     public void login_test_case_7() {
         System.out.println("==============option 7===================");
         lC2.testNfeLogin();
@@ -240,10 +240,10 @@ public class testCase extends BaseUtils {
     @Test(groups = {"7"}, priority = 10)
     public void testLoanAccepted() {
         lC6.LoanAppStatus("ACCEPTED_BY_CLIENT");
-    }*/
+    }
 
     /* -------------for option 8--------*/
-    /*@Test(groups = {"8"}, priority = 1)
+    @Test(groups = {"8"}, priority = 1)
     public void login_test_case_8() {
         System.out.println("==============option 8===================");
         lC2.testNfeLogin();
@@ -272,12 +272,12 @@ public class testCase extends BaseUtils {
     @Test(groups = {"8"}, priority = 6)
     public void testCompareObservation_5() {
         lC5.CompareObservation();
-    }*/
+    }
     @Test(groups = {"8"}, priority = 7)
     public void testScoreCard() {
         lC5.saveScoreCard();
     }
-/*    @Test(groups = {"8"}, priority = 8)
+    @Test(groups = {"8"}, priority = 8)
 
     public void testStatus_5() {
         lC3.loanAppStatusUpdate("PROCESSING");
@@ -303,5 +303,5 @@ public class testCase extends BaseUtils {
     public void testLoanReqForDisbursal() {
         lC8.LoanStatus("DOCS_SENT_TO_NBFC");
         lC8.LoanStatus("READY_FOR_DISBURSAL");
-    }*/
+    }
 }
