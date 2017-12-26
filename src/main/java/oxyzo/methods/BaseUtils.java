@@ -76,7 +76,7 @@ public class BaseUtils {
                     contentType("text/html").
 
                     when().
-                    put("http://stg-api.ofbusiness.in/api/v1/automationBot/account").
+                    put("/api/v1/automationBot/account").
 
                     then();
             context.response=context.vResponse.log().ifError().
