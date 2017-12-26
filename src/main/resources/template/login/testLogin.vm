@@ -1,0 +1,5 @@
+{
+	"mobile":"$context.getTestMobile()",
+	"password":"$context.getTestPassword()",
+	"userProfileType":"OXYZOAPPLICANT"
+}

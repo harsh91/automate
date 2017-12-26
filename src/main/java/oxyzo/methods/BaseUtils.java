@@ -1,6 +1,7 @@
 package oxyzo.methods;
 
 import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
 import org.hamcrest.Matchers;
 import org.json.JSONException;
@@ -20,6 +21,7 @@ public class BaseUtils {
 
     String strLoanAppId=null;
     String strLoanId=null;
+    private static final Context context = Context.getInstance();
 
     //Before Suite
     @BeforeSuite
@@ -29,6 +31,149 @@ public class BaseUtils {
         myTestNG.setUseDefaultListeners(true);
     }
 
+    @BeforeSuite(groups = {"1","2","3","4","5","6","7","8"})
+    public void setURL() {
+        // Setup data
+        setupData();
+        RestAssured.baseURI = context.getBaseURI();
+        testCreateAutomationAccount();
+    }
+
+    @BeforeSuite(groups = {"1","2","3","4","5","6","7","8"})
+    public void turnOffTestNgListener() {
+
+        TestNG myTestNG = new TestNG();
+        myTestNG.setUseDefaultListeners(true);
+        System.out.println("which option to select: \n 1. loan application with no sales assignee \n 2. loan "
+            + "application with sales assignee \n 3. loan application status - processing \n 4. loan application"
+            + "status - underwriting \n 5. loan application status - sent_to_nbfc \n 6. loan application status - "
+            + "offered status \n 7.loan application in accepted status i.e loan with loan-id and with status - "
+            + "waiting_for_docs");
+        findLoanApplication();
+        findLoan();
+    }
+
+    public void setupData() {
+        try {
+            // Setup Data
+            context.setProperties(PropertiesLoaderUtils.loadProperties(context.getResource()));
+            context.setBaseURI(context.getProperties().getProperty("baseURI"));
+            context.setCmsbaseURI(context.getProperties().getProperty("cmsbaseURI"));
+            System.out.println(context.getProperties().getProperty("cmsbaseURI"));
+        }
+           catch (Exception e)
+        {
+            throw new IllegalStateException("exception", e);
+        }
+    }
+
+    public void testCreateAutomationAccount() {
+        try {
+            context.vResponse=
+                given().log().all().
+                    contentType("text/html").
+
+                    when().
+                    put("http://stg-api.ofbusiness.in/api/v1/automationBot/account").
+
+                    then();
+            context.response=context.vResponse.log().ifError().
+                assertThat().statusCode(Matchers.equalTo(200)).
+                extract().
+                response();
+
+            context.setTestAccountID(context.response.jsonPath().getString("data.accountId"));
+            System.out.println("getTestAccountID: "+context.getTestAccountID());
+            testLogin();
+            fetchAccIdFromToken();
+        }
+        catch (Exception e)
+        {
+            String errorResponseBody = context.vResponse.extract().response().print();
+            String errorMessage = null;
+            try {
+                JSONObject jsonObject = new JSONObject(errorResponseBody);
+                errorMessage = jsonObject.getString("errorMessage");
+            } catch (JSONException e1) {
+                //ignore
+            }
+        }
+    }
+
+    public String addUserRole() {
+        try {
+            context.vResponse =
+                given().log()
+                    .all()
+                    .contentType("application/json")
+                    .body(VelocityTemplateFactory.convertTemplateToString(
+                        "src/main/resources/template/login/addUserRole.vm"))
+                    .when()
+                    .put("/api/v1/oxyzo/admin/role/SUPER_ADMIN_ROLE_ID/addUsers").
+                    then();
+            context.response = context.vResponse.log().ifError().
+                assertThat().body("success", Matchers.equalTo(true)).
+                assertThat().body("errorMessage", Matchers.equalTo(null)).
+                log().ifError().
+
+                extract().
+                response();
+
+            JsonPath jsonPath = context.response.jsonPath();
+            context.setAdminAuthToken(jsonPath.getString("data.token"));
+
+            System.out.print("auth token:" + context.getAdminAuthToken());
+        }
+        catch (Exception e) {
+            String errorResponseBody = context.vResponse.extract().response().print();
+            String errorMessage = null;
+            try {
+                JSONObject jsonObject = new JSONObject(errorResponseBody);
+                errorMessage = jsonObject.getString("errorMessage");
+            } catch (JSONException e1) {
+                //ignore
+            }
+        }
+        return context.getAuthToken();
+    }
+
+    public String testLogin() {
+        try {
+            context.vResponse =
+                given().log()
+                    .all()
+                    .contentType("application/json")
+                    .body(VelocityTemplateFactory.convertTemplateToString(
+                        "src/main/resources/template/login/testLogin.vm"))
+                    .when()
+                    .post("http://stg-api.ofbusiness.in/api/v1/oxyzo/applicant/account/login").
+                    then();
+            context.response = context.vResponse.log().ifError().
+                assertThat().body("success", Matchers.equalTo(true)).
+                assertThat().body("errorMessage", Matchers.equalTo(null)).
+                log().ifError().
+
+                extract().
+                response();
+
+            JsonPath jsonPath = context.response.jsonPath();
+            context.setAdminAuthToken(jsonPath.getString("data.token"));
+
+            System.out.print("auth token:" + context.getAdminAuthToken());
+        }
+         catch (Exception e) {
+            String errorResponseBody = context.vResponse.extract().response().print();
+            String errorMessage = null;
+            try {
+                JSONObject jsonObject = new JSONObject(errorResponseBody);
+                errorMessage = jsonObject.getString("errorMessage");
+            } catch (JSONException e1) {
+                //ignore
+            }
+        }
+        return context.getAuthToken();
+    }
+
     public void findLoanApplication()
     {
         Integer numbLoan =0;
@@ -36,7 +181,7 @@ public class BaseUtils {
         context.vResponse =
             given().log().all().
                 contentType("application/json").
-                header("X-OFB-TOKEN", "6340461937448460011").//change this nitika
+                header("X-OFB-TOKEN", context.getAdminAuthToken()).
 
                 when().
                 get("/api/v1/oxyzo/admin/loanApplications?pageNumber=0&query=9654997632&filter=STATUS:ALL").
@@ -69,7 +214,7 @@ public class BaseUtils {
         context.vResponse =
             given().log().all().
                 contentType("application/json").
-                header("X-OFB-TOKEN", "6340461937448460011").//change this nitika
+                header("X-OFB-TOKEN", context.getAdminAuthToken()).
 
                 when().
                 get("/api/v1/oxyzo/admin/loans?query=&filter=ASSOCIATE_ACCOUNT_ID:6076953799463800943").
@@ -100,9 +245,9 @@ public class BaseUtils {
         context.vResponse =
             given().log().all().
                 contentType("application/json").
-                header("X-OFB-TOKEN", "6340461937448460011").//change this nitika
+                header("X-OFB-TOKEN", context.getAdminAuthToken()).
                 body(VelocityTemplateFactory.convertTemplateToString
-                ("src/main/resources/template/login/loanStatus.vm")).
+                    ("src/main/resources/template/login/loanStatus.vm")).
                 when().
                 post("/api/v1/oxyzo/internal/loanApplication/"+strLoanAppId+"/status/ABANDONED").
 
@@ -115,10 +260,10 @@ public class BaseUtils {
         context.vResponse =
             given().log().all().
                 contentType("application/json").
-                header("X-OFB-TOKEN", "6340461937448460011").//change this nitika
+                header("X-OFB-TOKEN", context.getAdminAuthToken()).
                 when().
                 put("/api/v1/oxyzo/internal/changeDeletionStatus?entityType=LOAN_APPLICATION&entityId"
-                        + "="+strLoanAppId+"&isDeleteRequest=true").
+                    + "="+strLoanAppId+"&isDeleteRequest=true").
                 then();
 
     }
@@ -128,52 +273,14 @@ public class BaseUtils {
         context.vResponse =
             given().log().all().
                 contentType("application/json").
-                header("X-OFB-TOKEN", "6340461937448460011").//change this nitika
+                header("X-OFB-TOKEN", context.getAdminAuthToken()).
                 body(VelocityTemplateFactory.convertTemplateToString
-                ("src/main/resources/template/login/loanStatus.vm")).
+                    ("src/main/resources/template/login/loanStatus.vm")).
                 when().
                 post("/api/v1/oxyzo/internal/loan/"+strLoanId+"/status/ABANDONED").
 
                 then();
 
-    }
-
-
-    @BeforeSuite(groups = {"1","2","3","4","5","6","7","8"})
-    public void turnOffTestNgListener() {
-
-        TestNG myTestNG = new TestNG();
-        myTestNG.setUseDefaultListeners(true);
-        System.out.println("which option to select: \n 1. loan application with no sales assignee \n 2. loan "
-            + "application with sales assignee \n 3. loan application status - processing \n 4. loan application"
-            + "status - underwriting \n 5. loan application status - sent_to_nbfc \n 6. loan application status - "
-            + "offered status \n 7.loan application in accepted status i.e loan with loan-id and with status - "
-            + "waiting_for_docs");
-        findLoanApplication();
-        findLoan();
-    }
-    private static final Context context = Context.getInstance();
-
-    @BeforeSuite(groups = {"1","2","3","4","5","6","7","8"})
-    public void setURL() {
-        // Setup data
-        setupData();
-        RestAssured.baseURI = context.getBaseURI();
-        System.out.println("base");
-    }
-
-    public void setupData() {
-        try {
-            // Setup Data
-            context.setProperties(PropertiesLoaderUtils.loadProperties(context.getResource()));
-            context.setBaseURI(context.getProperties().getProperty("baseURI"));
-            context.setApiURI(context.getProperties().getProperty("apiURI"));
-            System.out.println(context.getProperties().getProperty("baseURI"));
-        }
-           catch (Exception e)
-        {
-            throw new IllegalStateException("exception", e);
-        }
     }
 
     public void fetchAccIdFromToken() {
@@ -184,7 +291,7 @@ public class BaseUtils {
                     header("X-OFB-TOKEN", context.getAuthToken()).
 
                     when().
-                    get("/api/v1/account/detail").
+                    get("http://stg-api.ofbusiness.in/api/v1/account/detail").
 
                     then();
             Response responseOfAccountDetail= context.vResponse.log().ifError().
@@ -209,36 +316,6 @@ public class BaseUtils {
                 //ignore
             }
             throw new RuntimeException(e);
-        }
-    }
-
-    public void testCreateAutomationAccount() {
-        try {
-            context.vResponse=
-                given().log().all().
-                    contentType("text/html").
-
-                    when().
-                    put("/api/v1/automationBot/account").
-
-                    then();
-            context.response=context.vResponse.log().ifError().
-                assertThat().statusCode(Matchers.equalTo(200)).
-                extract().
-                response();
-
-            context.setTestAccountID("data.accountId");
-        }
-        catch (Exception e)
-        {
-            String errorResponseBody = context.vResponse.extract().response().print();
-            String errorMessage = null;
-            try {
-                JSONObject jsonObject = new JSONObject(errorResponseBody);
-                errorMessage = jsonObject.getString("errorMessage");
-            } catch (JSONException e1) {
-                //ignore
-            }
         }
     }
 }

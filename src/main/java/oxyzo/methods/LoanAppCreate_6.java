@@ -26,7 +26,7 @@ public class LoanAppCreate_6 extends BaseUtils{
         context.vResponse =
             given().log().all().
                 contentType("application/json").
-                header("X-OFB-TOKEN", context.getAuthToken()).
+                header("X-OFB-TOKEN", context.getAdminAuthToken()).
                 body(VelocityTemplateFactory.convertTemplateToString
                     ("src/main/resources/template/test_6/loanAppStatus.vm")).
 

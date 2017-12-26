@@ -22,6 +22,7 @@ public class Context {
     public ValidatableResponse vResponse =null;
     public Response response =null;
     public String baseURI;
+    public String cmsbaseURI;
     public String apiURI;
     public String authToken;
     public String loanAppId;
@@ -29,6 +30,10 @@ public class Context {
     public String status;
     public String loanRequestId;
     public String loanId;
+    public String adminAuthToken;
+    public String testMobile = "1000000000";
+    public String testPassword = "##ofbdevautomation@2016##";
+
 
     public static Context getInstance() {
         return instance;
@@ -72,6 +77,14 @@ public class Context {
 
     public void setBaseURI(String baseURI) {
         this.baseURI = baseURI;
+    }
+
+    public String getCmsbaseURI() {
+        return cmsbaseURI;
+    }
+
+    public void setCmsbaseURI(String cmsbaseURI) {
+        this.cmsbaseURI = cmsbaseURI;
     }
 
     public String getApiURI() {
@@ -122,25 +135,42 @@ public class Context {
         this.status = status;
     }
 
- /*   public String getClientApplicationId() {
-        return clientApplicationId;
-    }
-
-    public void setClientApplicationId(String clientApplicationId) {
-        this.clientApplicationId = clientApplicationId;
-    }*/
- public String getLoanRequestId() {
+    public String getLoanRequestId() {
      return loanRequestId;
  }
 
     public void setLoanRequestId(String loanRequestId) {
         this.loanRequestId = loanRequestId;
     }
+
     public String getLoanId() {
         return loanId;
     }
 
     public void setLoanId(String loanId) {
         this.loanId = loanId;
+    }
+
+    public String getAdminAuthToken() {
+        return adminAuthToken;
+    }
+
+    public void setAdminAuthToken(String adminAuthToken) {
+        this.adminAuthToken = adminAuthToken;
+    }
+
+    public void setTestPassword(String testPassword) {
+        this.testPassword = testPassword;
+    }
+    public String getTestMobile() {
+        return testMobile;
+    }
+
+    public void setTestMobile(String testMobile) {
+        this.testMobile = testMobile;
+    }
+
+    public String getTestPassword() {
+        return testPassword;
     }
 }

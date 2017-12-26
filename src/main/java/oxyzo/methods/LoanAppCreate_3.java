@@ -20,7 +20,7 @@ public class LoanAppCreate_3 extends BaseUtils {
         context.vResponse =
             given().log().all().
                 contentType("application/json").
-                header("X-OFB-TOKEN", context.getAuthToken()).
+                header("X-OFB-TOKEN", context.getAdminAuthToken()).
                 body(VelocityTemplateFactory.convertTemplateToString("src/main/resources/template/test_3/updateApp"
                     + ".vm")).
 
@@ -41,12 +41,10 @@ public class LoanAppCreate_3 extends BaseUtils {
 
     public void loanAppVerifiedCust()
     {
-        context.setAuthToken("6343633175960362215"); //change this nitika
-        System.out.println("auth token: "+ context.getAuthToken());
         context.vResponse =
             given().log().all().
                 contentType("application/json").
-                header("X-OFB-TOKEN", context.getAuthToken()).
+                header("X-OFB-TOKEN",context.getAdminAuthToken()).
                 body(VelocityTemplateFactory.convertTemplateToString("src/main/resources/template/test_3/verifiedCust.vm")).
 
                 when().
@@ -73,7 +71,7 @@ public class LoanAppCreate_3 extends BaseUtils {
         context.vResponse =
             given().log().all().
                 contentType("application/json").
-                header("X-OFB-TOKEN", context.getAuthToken()).
+                header("X-OFB-TOKEN", context.getAdminAuthToken()).
                 body(VelocityTemplateFactory.convertTemplateToString("src/main/resources/template/test_3/status.vm")).
 
                 when().
@@ -83,8 +81,6 @@ public class LoanAppCreate_3 extends BaseUtils {
                 then();
         context.response=
             context.vResponse.
-               // assertThat().body("success", equalTo(true)).
-                //assertThat().body("errorMessage", equalTo(null)).
                 assertThat().statusCode(Matchers.equalTo(200)).
 
                 extract().
