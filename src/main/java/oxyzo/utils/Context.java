@@ -5,7 +5,6 @@ import com.jayway.restassured.response.Response;
 import java.util.Properties;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 /**
  * Created by nitika on 24/11/17.
@@ -16,11 +15,11 @@ public class Context {
     }
 
     private static final Context instance = new Context();
-    Resource resource = new ClassPathResource("staging/environment.properties");
+    Resource resource;
     Properties properties = null;
     public String testAccountID;
-    public ValidatableResponse vResponse =null;
-    public Response response =null;
+    public ValidatableResponse vResponse = null;
+    public Response response = null;
     public String baseURI;
     public String cmsbaseURI;
     public String apiURI;
@@ -34,13 +33,16 @@ public class Context {
     public String testMobile = "1000000000";
     public String testPassword = "##ofbdevautomation@2016##";
 
-
     public static Context getInstance() {
         return instance;
     }
 
-    public Resource getResource() {
-        return resource;
+    public Resource getResource(String stgType) {
+        if (stgType != null && stgType.equals("1")) {
+            return new ClassPathResource("staging/environment.properties");
+        } else {
+            return new ClassPathResource("staging/environment_stg2.properties");
+        }
     }
 
     public void setResource(Resource resource) {
@@ -54,6 +56,7 @@ public class Context {
     public void setProperties(Properties properties) {
         this.properties = properties;
     }
+
     public String getTestAccountID() {
         return testAccountID;
     }
@@ -61,7 +64,6 @@ public class Context {
     public void setTestAccountID(String testAccountID) {
         this.testAccountID = testAccountID;
     }
-
 
     public ValidatableResponse getvResponse() {
         return vResponse;
@@ -136,8 +138,8 @@ public class Context {
     }
 
     public String getLoanRequestId() {
-     return loanRequestId;
- }
+        return loanRequestId;
+    }
 
     public void setLoanRequestId(String loanRequestId) {
         this.loanRequestId = loanRequestId;
@@ -162,6 +164,7 @@ public class Context {
     public void setTestPassword(String testPassword) {
         this.testPassword = testPassword;
     }
+
     public String getTestMobile() {
         return testMobile;
     }

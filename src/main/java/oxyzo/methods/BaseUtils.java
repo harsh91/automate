@@ -35,13 +35,14 @@ public class BaseUtils {
     public void setURL() {
         // Setup data
         setupData();
-        RestAssured.baseURI = context.getBaseURI();
+        RestAssured.baseURI = context.getCmsbaseURI();
         testCreateAutomationAccount();
+        turnOffTestNgListener();
     }
 
-    @BeforeSuite(groups = {"1","2","3","4","5","6","7","8"})
+  //  @BeforeSuite(groups = {"1","2","3","4","5","6","7","8"})
     public void turnOffTestNgListener() {
-
+        RestAssured.baseURI = context.getBaseURI();
         TestNG myTestNG = new TestNG();
         myTestNG.setUseDefaultListeners(true);
         System.out.println("which option to select: \n 1. loan application with no sales assignee \n 2. loan "
@@ -56,7 +57,8 @@ public class BaseUtils {
     public void setupData() {
         try {
             // Setup Data
-            context.setProperties(PropertiesLoaderUtils.loadProperties(context.getResource()));
+            String stgType = System.getProperty("stgType");
+            context.setProperties(PropertiesLoaderUtils.loadProperties(context.getResource(stgType)));
             context.setBaseURI(context.getProperties().getProperty("baseURI"));
             context.setCmsbaseURI(context.getProperties().getProperty("cmsbaseURI"));
             System.out.println(context.getProperties().getProperty("cmsbaseURI"));
@@ -78,7 +80,7 @@ public class BaseUtils {
 
                     then();
             context.response=context.vResponse.log().ifError().
-                assertThat().statusCode(Matchers.equalTo(200)).
+              //  assertThat().statusCode(Matchers.equalTo(200)).
                 extract().
                 response();
 
@@ -86,6 +88,7 @@ public class BaseUtils {
             System.out.println("getTestAccountID: "+context.getTestAccountID());
             testLogin();
             fetchAccIdFromToken();
+            addUserRole();
         }
         catch (Exception e)
         {
@@ -112,8 +115,7 @@ public class BaseUtils {
                     .put("/api/v1/oxyzo/admin/role/SUPER_ADMIN_ROLE_ID/addUsers").
                     then();
             context.response = context.vResponse.log().ifError().
-                assertThat().body("success", Matchers.equalTo(true)).
-                assertThat().body("errorMessage", Matchers.equalTo(null)).
+                assertThat().statusCode(200).
                 log().ifError().
 
                 extract().
@@ -146,7 +148,7 @@ public class BaseUtils {
                     .body(VelocityTemplateFactory.convertTemplateToString(
                         "src/main/resources/template/login/testLogin.vm"))
                     .when()
-                    .post("http://stg-api.ofbusiness.in/api/v1/oxyzo/applicant/account/login").
+                    .post("/api/v1/oxyzo/applicant/account/login").
                     then();
             context.response = context.vResponse.log().ifError().
                 assertThat().body("success", Matchers.equalTo(true)).
@@ -171,7 +173,7 @@ public class BaseUtils {
                 //ignore
             }
         }
-        return context.getAuthToken();
+        return context.getAdminAuthToken();
     }
 
     public void findLoanApplication()
@@ -291,7 +293,7 @@ public class BaseUtils {
                     header("X-OFB-TOKEN", context.getAuthToken()).
 
                     when().
-                    get("http://stg-api.ofbusiness.in/api/v1/account/detail").
+                    get("/api/v1/account/detail").
 
                     then();
             Response responseOfAccountDetail= context.vResponse.log().ifError().
