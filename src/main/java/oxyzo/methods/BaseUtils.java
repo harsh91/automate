@@ -139,7 +139,7 @@ public class BaseUtils {
     }
 
 
-    @BeforeSuite
+    @BeforeSuite(groups = {"1","2","3","4","5","6","7","8"})
     public void turnOffTestNgListener() {
 
         TestNG myTestNG = new TestNG();
@@ -154,11 +154,12 @@ public class BaseUtils {
     }
     private static final Context context = Context.getInstance();
 
-    @BeforeSuite(groups = {"sanity"})
+    @BeforeSuite(groups = {"1","2","3","4","5","6","7","8"})
     public void setURL() {
         // Setup data
         setupData();
         RestAssured.baseURI = context.getBaseURI();
+        System.out.println("base");
     }
 
     public void setupData() {
