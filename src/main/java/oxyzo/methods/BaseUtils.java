@@ -87,7 +87,10 @@ public class BaseUtils {
             System.out.println("getTestAccountID: "+context.getTestAccountID());
             testLogin();
             fetchAccIdFromToken();
-           // addUserRole();
+            context.setAdminAuthToken("6343633175960362215");
+            RestAssured.baseURI = context.getBaseURI();
+
+            // addUserRole();
         }
         catch (Exception e)
         {
@@ -104,7 +107,6 @@ public class BaseUtils {
 
     public String addUserRole() {
         try {
-            RestAssured.baseURI = context.getBaseURI();
             context.vResponse =
                 given().log()
                     .all()
