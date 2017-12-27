@@ -87,7 +87,7 @@ public class BaseUtils {
             System.out.println("getTestAccountID: "+context.getTestAccountID());
             testLogin();
             fetchAccIdFromToken();
-            context.setAdminAuthToken("6343633175960362215");
+            context.setAdminAuthToken("6345422489018965726");
             RestAssured.baseURI = context.getBaseURI();
 
             // addUserRole();
