@@ -42,7 +42,6 @@ public class BaseUtils {
 
   //  @BeforeSuite(groups = {"1","2","3","4","5","6","7","8"})
     public void turnOffTestNgListener() {
-        RestAssured.baseURI = context.getBaseURI();
         TestNG myTestNG = new TestNG();
         myTestNG.setUseDefaultListeners(true);
         System.out.println("which option to select: \n 1. loan application with no sales assignee \n 2. loan "
@@ -88,7 +87,7 @@ public class BaseUtils {
             System.out.println("getTestAccountID: "+context.getTestAccountID());
             testLogin();
             fetchAccIdFromToken();
-            addUserRole();
+           // addUserRole();
         }
         catch (Exception e)
         {
@@ -105,10 +104,12 @@ public class BaseUtils {
 
     public String addUserRole() {
         try {
+            RestAssured.baseURI = context.getBaseURI();
             context.vResponse =
                 given().log()
                     .all()
                     .contentType("application/json")
+                    .header("X-OFB-TOKEN", context.getAdminAuthToken())
                     .body(VelocityTemplateFactory.convertTemplateToString(
                         "src/main/resources/template/login/addUserRole.vm"))
                     .when()
@@ -122,9 +123,9 @@ public class BaseUtils {
                 response();
 
             JsonPath jsonPath = context.response.jsonPath();
-            context.setAdminAuthToken(jsonPath.getString("data.token"));
+           // context.setAdminAuthToken(jsonPath.getString("data.token"));
 
-            System.out.print("auth token:" + context.getAdminAuthToken());
+            //System.out.print("auth token:" + context.getAdminAuthToken());
         }
         catch (Exception e) {
             String errorResponseBody = context.vResponse.extract().response().print();
@@ -290,7 +291,7 @@ public class BaseUtils {
             context.vResponse=
                 given().log().all().
                     contentType("application/json").
-                    header("X-OFB-TOKEN", context.getAuthToken()).
+                    header("X-OFB-TOKEN", context.getAdminAuthToken()).
 
                     when().
                     get("/api/v1/account/detail").
