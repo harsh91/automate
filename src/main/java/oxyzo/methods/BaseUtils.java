@@ -87,10 +87,10 @@ public class BaseUtils {
             System.out.println("getTestAccountID: "+context.getTestAccountID());
             testLogin();
             fetchAccIdFromToken();
-            context.setAdminAuthToken("6345422489018965726");
+            //context.setAdminAuthToken("6345422489018965726");
             RestAssured.baseURI = context.getBaseURI();
 
-            // addUserRole();
+             addUserRole();
         }
         catch (Exception e)
         {
@@ -107,15 +107,16 @@ public class BaseUtils {
 
     public String addUserRole() {
         try {
+            String strAccountId = context.getTestAccountID();
+
             context.vResponse =
                 given().log()
                     .all()
                     .contentType("application/json")
                     .header("X-OFB-TOKEN", context.getAdminAuthToken())
-                    .body(VelocityTemplateFactory.convertTemplateToString(
-                        "src/main/resources/template/login/addUserRole.vm"))
+                    .body("[\""+strAccountId+"\"]")
                     .when()
-                    .put("/api/v1/oxyzo/admin/role/SUPER_ADMIN_ROLE_ID/addUsers").
+                    .put("/api/v1/oxyzo/internal/role/SUPER_ADMIN_ROLE_ID/addUsers").
                     then();
             context.response = context.vResponse.log().ifError().
                 assertThat().statusCode(200).
