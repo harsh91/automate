@@ -41,7 +41,7 @@ public class testCase extends BaseUtils {
     }
 
     /* -------------for option 3--------*/
-    @Test(groups = {"3"}, priority = 1)
+   /* @Test(groups = {"3"}, priority = 1)
     public void login_test_case_3() {
         System.out.println("==============option 3===================");
         lC2.testNfeLogin();
@@ -243,7 +243,7 @@ public class testCase extends BaseUtils {
     }
 
     /* -------------for option 8--------*/
- /*   @Test(groups = {"8"}, priority = 1)
+   @Test(groups = {"8"}, priority = 1)
     public void login_test_case_8() {
         System.out.println("==============option 8===================");
         lC2.testNfeLogin();
@@ -255,8 +255,8 @@ public class testCase extends BaseUtils {
 
     @Test(groups = {"8"},priority = 3)
     public void testVerifiedCustomer_5() {
-        testCreateAutomationAccount();
-        fetchAccIdFromToken();
+        //testCreateAutomationAccount();
+        //fetchAccIdFromToken();
         lC3.loanAppVerifiedCust();
     }
 
@@ -303,5 +303,5 @@ public class testCase extends BaseUtils {
     public void testLoanReqForDisbursal() {
         lC8.LoanStatus("DOCS_SENT_TO_NBFC");
         lC8.LoanStatus("READY_FOR_DISBURSAL");
-    }*/
+    }
 }
